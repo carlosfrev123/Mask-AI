@@ -1,6 +1,0 @@
-go to:
-
-https://www.kaggle.com/datasets/omkargurav/face-mask-dataset?resource=download
-
-
-download that and put it in this folder

@@ -32,7 +32,7 @@ class DinoVisionTransformerClassifier(torch.nn.Module):
         self.classifier = torch.nn.Sequential(
             torch.nn.Linear(384, 256),
             torch.nn.ReLU(),
-            torch.nn.Linear(256, 3)
+            torch.nn.Linear(256, 2)
         )
 
     def forward(self, x):
@@ -115,35 +115,35 @@ class Utils:
 
 
 
-# # Run the model on the test data
-# # Path to test data: Acne-type-classification-2/test, where each subfolder is a label class
-# cwd = os.getcwd()
-# utils = Utils()
-# model = DinoVisionTransformerClassifier()
-# test_data = '/content/Acne-type-classification-3/test' #os.path.join(cwd, "Acne-type-classification-2/test")
-# train_data = '/content/Acne-type-classification-3/train' #os.path.join(cwd, "Acne-type-classification-2/train")
-# train_data = datasets.ImageFolder(train_data, transform=utils.transform_image)
-# test_data = datasets.ImageFolder(test_data, transform=utils.transform_image)
-# train_loader = torch.utils.data.DataLoader(train_data, batch_size=32, shuffle=True)
-# val_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=True)
-# criterion = torch.nn.CrossEntropyLoss()
-# optimizer = torch.optim.Adam(model.parameters(), lr=0.000001)
-# scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=9, gamma=0.1)
+# Run the model on the test data
+# Path to test data: Acne-type-classification-2/test, where each subfolder is a label class
+cwd = os.getcwd()
+utils = Utils()
+model = DinoVisionTransformerClassifier()
+test_data = './images/test' #os.path.join(cwd, "Acne-type-classification-2/test")
+train_data = './images/train' #os.path.join(cwd, "Acne-type-classification-2/train")
+train_data = datasets.ImageFolder(train_data, transform=utils.transform_image)
+test_data = datasets.ImageFolder(test_data, transform=utils.transform_image)
+train_loader = torch.utils.data.DataLoader(train_data, batch_size=32, shuffle=True)
+val_loader = torch.utils.data.DataLoader(test_data, batch_size=32, shuffle=True)
+criterion = torch.nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.000001)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=9, gamma=0.1)
 
-# model.to(utils.device)
-# model = utils.train(model, train_loader, val_loader, criterion, optimizer, scheduler, num_epochs=10)
+model.to(utils.device)
+model = utils.train(model, train_loader, val_loader, criterion, optimizer, scheduler, num_epochs=10)
 
-# # Save the model
-# torch.save(model.state_dict(), "model.pth")
+# Save the model
+torch.save(model.state_dict(), "model.pth")
 
-# #Load model
-# model = DinoVisionTransformerClassifier()
-# model.load_state_dict(torch.load("model.pth"))
-# model.to(utils.device)
-# model.eval()
+#Load model
+model = DinoVisionTransformerClassifier()
+model.load_state_dict(torch.load("model.pth"))
+model.to(utils.device)
+model.eval()
 
 # # Run the model on a test image and print the prediction
-# img = utils.transform_image(Image.open('/content/Acne-type-classification-3/test/1/1.jpg').convert('RGB')).unsqueeze(0).to(utils.device)
+# img = utils.transform_image(Image.open('./images/test/').convert('RGB')).unsqueeze(0).to(utils.device)
 # output = model(img)
 # _, pred = torch.max(output, 1)
 # print(pred.item())
